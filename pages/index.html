@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>The Eternal Project</title>
+    <link rel="stylesheet" type="text/css" href="public/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz@8..144&family=Ubuntu&display=swap" rel="stylesheet">
+  </head>
+  <div>
+  <body class="body">
+    <div id="header">
+      <header>
+        <div class="title_box">
+          <p class="main_title">The <span class="E">E</span>ternal Project</p>
+          <div class="options">
+            <form action="/logout" method="post">
+              <button action="/logout" method="post" class="logout">Logout</button>
+            </form>
+            <a href="dashboard.html"><button class="dashboard">Dashboard</button></a>
+          </div>
+        </div>
+      </header>
+    </div>
+    <div>
+      <main>
+        <div class="main_center">
+          <div class="welcome">
+            <p class="welcome_p">Welcome!</p>
+            <div>
+              <img class="sans_img" src="/public/img/sans.png">
+            </div>
+          </div>
+          <div class="main_center">
+            <p class="question">Are you Red Team, or Blue Team?</p>
+          </div>
+          <div class="main_center">
+            <div class="main_buttons">
+              <div class="tooltipRed">
+                <a href="ip_attack.html"><button class="redTeam" >Red Team ⚔️</button></a>
+                <span class="tooltipTextRed">This option will try to attack and get control on the remote host machine</span>
+              </div>
+              <div class="tooltipBlue">
+                <a href="ip_def.html"><button class="blueTeam">Blue Team 🛡️</button></a>
+                <span class="tooltipTextBlue">This option will try to defened the remote host machine</span>
+              </div>
+            </div>
+            <div>
+            <form action="/professinal" method="post">
+              <button action="/professinal" method="post" class="professional">I'm a professional</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <div class="overlay hidden"></div>
+    <div>
+      <footer>
+        <div class="main_center">
+          <div class="attention">
+          <p class="notice">Attention!</p>
+          <p>The usage of this program is for educational
+            purposes or legal actions only.
+          </p>
+          </div>
+          <script type="module" src="../public/js/script.js"></script>
+        </div>
+      </footer>
+    </div>
+  </div>
+</html>

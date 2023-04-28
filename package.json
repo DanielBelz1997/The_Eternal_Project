@@ -1,0 +1,38 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "The_Etenral_Project",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "dev": "nodemon server"
+  },
+  "author": "Daniel Belz",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "date-fns": "^2.23.0",
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.9",
+    "exec-cmd": "^2.0.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.3",
+    "html": "^1.0.0",
+    "install": "^0.13.0",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.2.3",
+    "open": "^9.1.0",
+    "sequelize": "^6.31.0",
+    "sqlite3": "^5.1.6",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "async-exec-cmd": "^2.0.2",
+    "node-cmd": "^5.0.0",
+    "nodemon": "^2.0.12",
+    "opener": "^1.5.2"
+  }
+}

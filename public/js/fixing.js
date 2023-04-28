@@ -1,0 +1,3 @@
+"use strict";
+
+// node.js is requierd for this operation...

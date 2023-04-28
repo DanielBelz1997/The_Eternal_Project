@@ -1,0 +1,52 @@
+button,
+input,
+p {
+  font-family: "Ubuntu", sans-serif;
+}
+
+.body {
+  background-image: url(/public/img/sss.png);
+  background-size: 100%;
+  font-family: "Ubuntu", sans-serif;
+  margin: 0px;
+  padding: 0px;
+}
+
+.title_box {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.main_title {
+  margin: 0;
+  padding: 20px 10px 20px 30px;
+  font-size: 35px;
+  font-family: "BN Dragon", sans-serif;
+  font-weight: 200;
+  font-stretch: ultra-condensed;
+  color: white;
+}
+
+.E {
+  display: inline-block;
+  font-style: italic;
+  font-size: larger;
+  font-family: "BN Dragon", sans-serif;
+}
+
+.main_parag {
+  font-size: 25px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+main {
+  text-align: center;
+}
+
+.sans_scaning {
+  width: 50px;
+  margin-top: 150px;
+}

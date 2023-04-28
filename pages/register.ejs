@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Register</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+    rel="stylesheet"
+    type="text/css"
+    media="screen"
+    href="/public/css/register.css"
+  />
+  </head>
+  <body>
+    <div class="background">
+      <div class="shape"></div>
+      <div class="shape"></div>
+    </div>
+    <form action="/register" method="post">
+
+      <h3>Register</h3>
+
+      <label for="username">Username</label>
+      <input type="text" name="username" placeholder="Username" id="username">
+
+      <label for="email">Email</label>
+      <input type="text" name="email" placeholder="Enter a valid mail address" id="email">
+
+      <label for="password">Password</label>
+      <input type="password" name="password" placeholder="Password" id="password">
+
+      <label for="password">Reapet Password</label>
+      <input type="password" name="repeatPassword" placeholder="Password" id="repeatPassword">
+
+      <button>Register</button>
+      </div>
+    </form>
+  </body>
+</html>

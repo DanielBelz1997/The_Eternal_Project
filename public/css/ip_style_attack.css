@@ -1,0 +1,84 @@
+button,
+input,
+p {
+  font-family: "Ubuntu", sans-serif;
+}
+
+.body {
+  background-image: url(/public/img/sss.png);
+  background-size: 100%;
+  font-family: "Ubuntu", sans-serif;
+  margin: 0px;
+  padding: 0px;
+}
+
+.main_title {
+  margin: 0;
+  padding: 20px 10px 20px 30px;
+  font-size: 35px;
+  font-family: "BN Dragon", sans-serif;
+  font-weight: 200;
+  font-stretch: ultra-condensed;
+  color: white;
+}
+
+.E {
+  display: inline-block;
+  font-style: italic;
+  font-size: larger;
+  font-family: "BN Dragon", sans-serif;
+}
+
+.question {
+  font-size: 25px;
+  margin-top: 100px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+main {
+  text-align: center;
+}
+
+.search {
+  padding: 10px 8px 10px 20px;
+  background-image: url("/public/img/search_Atc.png");
+  background-size: 35px;
+  background-repeat: no-repeat;
+  color: white;
+  background-position: left;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 15px;
+  background-color: #0d1117;
+  color: white;
+  border-color: #fefefe;
+  border-style: solid;
+  transition: padding 0.3s;
+}
+
+.search:focus {
+  padding: 10px 40px 10px 40px;
+}
+
+.enumrate_button {
+  margin-top: 15px;
+  padding: 7px 35px;
+  font-size: 15px;
+  border-radius: 10px;
+  background-color: rgb(56, 56, 56);
+  color: white;
+  border-style: none;
+  border-width: 0;
+  cursor: pointer;
+}
+
+.enumrate_button:hover {
+  background: linear-gradient(to top left, #d9b40e, #fff947);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
+}
+
+.enumrate_button:active {
+  opacity: 0.8;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+}

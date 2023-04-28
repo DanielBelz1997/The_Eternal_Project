@@ -1,0 +1,283 @@
+button,
+input,
+p {
+  font-family: "Ubuntu", sans-serif;
+}
+
+.body {
+  background-image: url(/public/img/sss.png);
+  background-size: 100%;
+  font-family: "Ubuntu", sans-serif;
+  margin: 0px;
+  padding: 0px;
+}
+
+.sans_img {
+  width: 50px;
+  margin-top: 0px;
+}
+
+.title_box {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.logout {
+  text-align: center;
+  margin: 25px 10px;
+  padding: 10px 10px;
+  margin-right: 1px;
+  cursor: pointer;
+  color: white;
+  background-color: #0d1117;
+  border-radius: 20px;
+  border-color: #ffffff;
+}
+
+.logout:hover,
+.dashboard:hover {
+  opacity: 0.8;
+}
+
+.logout:active,
+.register:active {
+  opacity: 0.7;
+}
+
+.dashboard {
+  text-align: center;
+  margin: 25px 10px;
+  padding: 10px 10px;
+  margin-right: 20px;
+  cursor: pointer;
+  color: white;
+  background: linear-gradient(to top left, #d90e0e, #ff4778);
+  background-color: #0d1117;
+  border-radius: 20px;
+  border-style: none;
+}
+
+.options {
+  display: flex;
+}
+
+.main_title {
+  background-color: #0d1117;
+  margin: 0;
+  padding: 20px 10px 20px 30px;
+  font-size: 35px;
+  font-family: "BN Dragon", sans-serif;
+  font-weight: 200;
+  font-stretch: ultra-condensed;
+  color: white;
+}
+
+.E {
+  display: inline-block;
+  font-style: italic;
+  font-size: larger;
+  font-family: "BN Dragon", sans-serif;
+}
+
+.main_center {
+  text-align: center;
+}
+
+.welcome {
+  font-size: 40px;
+  margin: 0px;
+}
+
+.welcome_p {
+  margin-bottom: 17px;
+  color: white;
+}
+
+.question {
+  font-size: 20px;
+  margin-bottom: 50px;
+  color: white;
+}
+
+.redTeam {
+  border: none;
+  font-size: 20px;
+  color: rgb(255, 255, 255);
+  padding: 20px 40px;
+  margin-right: 50px;
+  border-radius: 5px;
+  background: linear-gradient(to top left, #d90e0e, #ff4778);
+  cursor: pointer;
+  transition: opacity 0.5s;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
+}
+
+.redTeam:hover {
+  opacity: 0.8;
+}
+
+.redTeam:active {
+  opacity: 0.7;
+}
+
+.blueTeam {
+  border: none;
+  font-size: 20px;
+  color: rgb(255, 255, 255);
+  padding: 20px 40px;
+  margin-left: 50px;
+  border-radius: 5px;
+  background: linear-gradient(to top left, #0e0ed9, #4753ff);
+  cursor: pointer;
+  transition: opacity 0.5s;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
+}
+
+.blueTeam:hover {
+  opacity: 0.8;
+}
+
+.blueTeam:active {
+  opacity: 0.7;
+}
+
+.main_buttons {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.professional {
+  text-align: center;
+  border: none;
+  font-size: 20px;
+  color: rgb(255, 255, 255);
+  padding: 10px 20px;
+  border-radius: 5px;
+  background: linear-gradient(to top left, #333336, #737373);
+  cursor: pointer;
+  transition: opacity 0.5s;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
+  margin-bottom: 25px;
+}
+
+.professional:hover {
+  opacity: 0.8;
+}
+
+.professional:active {
+  opacity: 0.7;
+}
+
+.attention {
+  position: relative;
+  background-color: #0d1117;
+  color: white;
+  padding: 0px 15px;
+  border: black;
+  border-width: 2px;
+  border-style: solid;
+  display: inline-block;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: box-shadow 0.15s, margin-top 0.15s;
+}
+
+.attention:hover {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+  margin-top: +2px;
+}
+
+.notice {
+  color: rgb(255, 72, 72);
+  font-size: larger;
+}
+
+.hidden {
+  display: none;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 5;
+}
+
+.tooltipBlue {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltipBlue .tooltipTextBlue {
+  visibility: hidden;
+  width: 120px;
+  background: linear-gradient(to top left, #0e0ed9, #4753ff);
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltipBlue:hover .tooltipTextBlue {
+  visibility: visible;
+}
+
+.tooltipBlue .tooltipTextBlue {
+  top: -10px;
+  left: 105%;
+}
+
+.tooltipBlue .tooltipTextBlue::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent rgb(71, 83, 255) transparent transparent;
+}
+
+.tooltipRed {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltipRed .tooltipTextRed {
+  visibility: hidden;
+  width: 150px;
+  background: linear-gradient(to top left, #d90e0e, #ff4778);
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltipRed:hover .tooltipTextRed {
+  visibility: visible;
+}
+
+.tooltipRed .tooltipTextRed {
+  top: -17px;
+  right: 105%;
+}
+
+.tooltipRed .tooltipTextRed::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent rgb(255, 71, 120) transparent transparent;
+}
