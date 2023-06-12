@@ -181,3 +181,41 @@ router.post("/solidersInfo", upload.single("file"), async (req, res) => {
 });
 
 export { router as SolidersInfo };
+
+----------------------------------
+סתם דברים חשובים שצריך לזכור: 13/06/23
+
+Yes, you are correct. In the code example provided, the declaration and initialization of the variable @variable should be placed outside the IF statement. Here's the corrected version:
+
+sql
+Copy code
+DECLARE @variable INT
+SET @variable = 10
+
+IF @variable > 5
+BEGIN
+    PRINT 'Variable is greater than 5'
+END
+ELSE
+BEGIN
+    PRINT 'Variable is not greater than 5'
+END
+By declaring and initializing the variable outside the IF statement, you ensure that the variable is available for evaluation within the IF condition.
+
+-------------------------------------------
+
+If the value you are trying to update to in the foreign key column of the first table (shav) already exists in the referenced column of the second table, and you're still encountering a conflict reference error, it could be due to one of the following reasons:
+
+Incorrect foreign key value:
+Double-check that the value you are updating to in the foreign key column of the first table matches an existing value in the referenced column of the second table exactly. Even a small difference like extra spaces or different casing can cause the conflict reference error.
+
+Disabled foreign key constraint:
+It's possible that the foreign key constraint on the first table (shav) has been temporarily disabled. In this case, even if the value exists in the referenced column of the second table, the constraint check won't occur, and you'll encounter a conflict reference error. Make sure that the foreign key constraint is enabled.
+
+Transactions and concurrency:
+If there are concurrent transactions happening on the database, it's possible that another transaction has modified the data in the second table since you retrieved it. This can cause conflicts when updating the foreign key value. Ensure that there are no concurrent updates happening on the referenced column of the second table.
+
+Orphaned records:
+Check for orphaned records in the first table (shav). An orphaned record is a record that has a foreign key value but does not have a corresponding entry in the referenced table. In such cases, updating the foreign key value to an existing value in the referenced table can still cause a conflict reference error. You'll need to identify and resolve any orphaned records in the first table before updating the foreign key value.
+
+By addressing these possibilities, you should be able to determine the cause of the conflict reference error and resolve the issue accordingly.
