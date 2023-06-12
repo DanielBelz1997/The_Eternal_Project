@@ -15,3 +15,169 @@
 
 18/4/2023:
 problem: the server isnt giving me the option to redirect. neet to care of it.
+
+-----------------------------
+דברים חשובים להכנסת אובייקטים מאקסל לטבלאות:
+-----------------------------
+front:
+
+import React, { useState } from "react";
+import axios from "axios";
+
+export function InsertSoliderInfo() {
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const handleUpload = () => {
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      axios
+        .post("http://localhost:3001/uploadSolidersInfo/solidersInfo", formData)
+        .then((response) => {
+          console.log("Upload successful!");
+        })
+        .catch((error) => {
+          console.error("Upload failed:", error);
+        });
+
+      console.log("Uploading file:", selectedFile);
+    } else {
+      console.log("No file selected.");
+    }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    handleUpload();
+  };
+
+  return (
+    <div className="upload-container">
+      <h1>Upload Excel Page</h1>
+      <form onSubmit={handleSubmit}>
+        <div className="file-input-container">
+          <input type="file" accept=".xlsx,.xls" onChange={handleFileChange} />
+          <label htmlFor="file-input"></label>
+          <span>{selectedFile ? selectedFile.name : "No file selected"}</span>
+        </div>
+        <button type="submit" className="upload-button">
+          Upload
+        </button>
+      </form>
+    </div>
+  );
+}
+
+--------------------------------
+backend:
+
+import express from "express";
+import XLSX from "xlsx";
+import multer from "multer";
+import sql from "mssql";
+
+const router = express.Router();
+
+const config = {
+  user: "your_username",
+  password: "your_password",
+  server: "your_server",
+  database: "your_database",
+  options: {
+    encrypt: true, // If using Azure SQL Database
+  },
+};
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, "tiron.xlsx");
+  },
+});
+
+const upload = multer({ storage: storage });
+
+router.post("/solidersInfo", upload.single("file"), async (req, res) => {
+  const file = req.file;
+
+  if (!file) {
+    return res.status(400).send("No file uploaded.");
+  }
+
+  const filePath = "uploads/tiron.xlsx";
+  const workbook = XLSX.readFile(filePath);
+  const sheetName = workbook.SheetNames[0];
+  const sheet = workbook.Sheets[sheetName];
+  const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+  // Define column name mappings
+  const columnMappings = {
+    armyNumber: "Army Number",
+    LastName: "Last Name",
+    firstName: "First Name",
+    quality: "Quality",
+    qualityGroup: "Quality Group",
+    initialPsychotechnicGrading: "Initial Psychotechnic Grading",
+    officerCoordinator: "Officer Coordinator",
+    hebrewLevel: "Hebrew Level",
+    welfareStage: "Welfare Stage",
+    SocioEconomicIndex: "Socio-Economic Index",
+    MilitaryServiceRemainingTime: "Military Service Remaining Time",
+    notCounted: "Not Counted",
+    militarySchool: "Military School",
+    newImmigrant: "New Immigrant",
+    lonely: "Lonely",
+    onlyChild: "Only Child",
+    adjustmentProblems: "Adjustment Problems",
+    ethiopian: "Ethiopian",
+    excessWeight: "Excess Weight",
+    militaryPrepSchool: "Military Prep School",
+    bonding: "Bonding",
+    rabbinicAcademy: "Rabbinic Academy",
+    druse: "Druse",
+  };
+
+  try {
+    const pool = await sql.connect(config);
+    const transaction = new sql.Transaction(pool);
+    await transaction.begin();
+
+    for (let i = 1; i < jsonData.length; i++) {
+      const row = jsonData[i];
+
+      // Map column names based on columnMappings
+      const mappedRow = {};
+      Object.keys(row).forEach((columnName, index) => {
+        const mappedColumnName = columnMappings[columnName];
+        if (mappedColumnName) {
+          mappedRow[mappedColumnName] = row[columnName];
+        }
+      });
+
+      const query = `
+        INSERT INTO SolidersInfo (
+          ${Object.keys(mappedRow).join(", ")}
+        ) VALUES (
+          ${Object.values(mappedRow).map((value) => `'${value || ""}'`).join(", ")}
+        )
+      `;
+
+      await transaction.request().query(query);
+    }
+
+    await transaction.commit();
+    return res.send("Upload and data insertion successful.");
+  } catch (error) {
+    console.error("Error inserting data into SolidersInfo table:", error);
+    return res.status(500).send("Error inserting data.");
+  }
+});
+
+export { router as SolidersInfo };
