@@ -216,6 +216,80 @@ Transactions and concurrency:
 If there are concurrent transactions happening on the database, it's possible that another transaction has modified the data in the second table since you retrieved it. This can cause conflicts when updating the foreign key value. Ensure that there are no concurrent updates happening on the referenced column of the second table.
 
 Orphaned records:
-Check for orphaned records in the first table (shav). An orphaned record is a record that has a foreign key value but does not have a corresponding entry in the referenced table. In such cases, updating the foreign key value to an existing value in the referenced table can still cause a conflict reference error. You'll need to identify and resolve any orphaned records in the first table before updating the foreign key value.
+Check for orphaned records in the first table (shav). An orphaned record is a record that has a foreign key value but does not have a corresponding entry in the
+
+
+referenced table. In such cases, updating the foreign key value to an existing value in the referenced table can still cause a conflict reference error. You'll need to identify and resolve any orphaned records in the first table before updating the foreign key value.
 
 By addressing these possibilities, you should be able to determine the cause of the conflict reference error and resolve the issue accordingly.
+
+---------------------------------------------------------------------
+
+npm install tsc -g
+
+npm install typescript --save-dev
+
+npm install ts-node --save-dev
+
+npm install -g typesync
+
+{
+  "compilerOptions": { /* Docs: [https://www.typescriptlang.org/tsconfig](https://www.typescriptlang.org/tsconfig) */
+    "target": "ES2020",
+    "module": "commonjs",
+    "outDir": "bin",
+    "rootDir": "src",
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "checkJs": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "types": [
+      "node"
+    ],
+    "lib": [
+      "es6"
+    ],
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowUnreachableCode": true,
+     "useUnknownInCatchVariables": false,  // TypeScript 4.4+ only!
+},
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "<node_internals>/**",
+  ]
+}
+
+זה לשים בתוך קובץ tsconfig.json
+
+.gitignore out-folder
+Using git? Modify .gitignore to exclude the out folder and temporary files from tsc .
+
+out/
+# TS -incremental file
+tsconfig.tsbuildinfo
+node_modules
+
+In .vscode/settings.json, use the following settings:
+
+{
+  "search.exclude": {
+     "**/node_modules": true,
+     "**/package-lock.json": true,
+     "**/package.json": true,
+     "out/**": true // Don't search the TypeScript "out" folder
+   }
+}
+
+typesync is a cool tool that detects missing types (if not found, install it with npm)
+
+> typesync
+
+https://plainenglish.io/blog/how-to-convert-node-js-code-from-javascript-to-typescript-8e7d031a8f49#create-tsconfigjson
