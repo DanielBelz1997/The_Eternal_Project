@@ -1,295 +1,43 @@
-יש לנו כמה דברים שנצטרך לעבוד עליהם מאחור:
-1.יצירת שרת בקאנד לאפליקציה שלנו
-	שזה כולל: יצירת ראוטים לכל הדפים שלנו, יצירת תיקיית Private להם וכו, (לעקוב אחרי המחברת והשיעורים ולנסות להבין איך כל זה מתחבר!)
-שיכיל את האופציות הבאות:
-2.יצירת משתמש בעזרת register:
-  2.1.הכנסת הפרמטרים של הנתונים שנקבל דרך api לשרת שלנו.
-	2.1.1. שלבים: 1. קבלת הערכים המוזנים דרך הפרונט
-			2. שליחתם לבק, ויצירת משתמש בעל id מסויים, כך שנוכל לקרוא לו לו אם הלוגין מואשר.
-			3. שאלות: איך נקבל את הערכים? איך נשלח אותם? איך נבנה api? איך שרת הבק ישקלל את הנתונים וייצור אובייקט של משתמש מסויים?
-					איך נקרא לנתונים הללו כדי לאמת את התחברות המשתמש? איפה ישמר המידע? באיזה סוג של טבלאות המידע יאוחסן? באילו קשרים?
-					איך נקרא מהנודגי'אס לקבל המידע ממסד הנתונים? איך נשמור את המידע של היסטוריית הפריצות של המשתמש בתוך מסד הנתונים, 
-					ובאיזו צורה? 
 
-בשאר הדברים נתמקד יותר מאוחר. זה בתור התחלה.
+Certainly! Let's walk through an example implementation of query caching using materialized views and adjusting PostgreSQL configuration parameters. Here's a step-by-step guide:
 
-18/4/2023:
-problem: the server isnt giving me the option to redirect. neet to care of it.
+Enable Materialized Views for Query Caching:
 
------------------------------
-דברים חשובים להכנסת אובייקטים מאקסל לטבלאות:
------------------------------
-front:
-
-import React, { useState } from "react";
-import axios from "axios";
-
-export function InsertSoliderInfo() {
-  const [selectedFile, setSelectedFile] = useState(null);
-
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
-
-  const handleUpload = () => {
-    if (selectedFile) {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-
-      axios
-        .post("http://localhost:3001/uploadSolidersInfo/solidersInfo", formData)
-        .then((response) => {
-          console.log("Upload successful!");
-        })
-        .catch((error) => {
-          console.error("Upload failed:", error);
-        });
-
-      console.log("Uploading file:", selectedFile);
-    } else {
-      console.log("No file selected.");
-    }
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    handleUpload();
-  };
-
-  return (
-    <div className="upload-container">
-      <h1>Upload Excel Page</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="file-input-container">
-          <input type="file" accept=".xlsx,.xls" onChange={handleFileChange} />
-          <label htmlFor="file-input"></label>
-          <span>{selectedFile ? selectedFile.name : "No file selected"}</span>
-        </div>
-        <button type="submit" className="upload-button">
-          Upload
-        </button>
-      </form>
-    </div>
-  );
-}
-
---------------------------------
-backend:
-
-import express from "express";
-import XLSX from "xlsx";
-import multer from "multer";
-import sql from "mssql";
-
-const router = express.Router();
-
-const config = {
-  user: "your_username",
-  password: "your_password",
-  server: "your_server",
-  database: "your_database",
-  options: {
-    encrypt: true, // If using Azure SQL Database
-  },
-};
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, "tiron.xlsx");
-  },
-});
-
-const upload = multer({ storage: storage });
-
-router.post("/solidersInfo", upload.single("file"), async (req, res) => {
-  const file = req.file;
-
-  if (!file) {
-    return res.status(400).send("No file uploaded.");
-  }
-
-  const filePath = "uploads/tiron.xlsx";
-  const workbook = XLSX.readFile(filePath);
-  const sheetName = workbook.SheetNames[0];
-  const sheet = workbook.Sheets[sheetName];
-  const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-  // Define column name mappings
-  const columnMappings = {
-    armyNumber: "Army Number",
-    LastName: "Last Name",
-    firstName: "First Name",
-    quality: "Quality",
-    qualityGroup: "Quality Group",
-    initialPsychotechnicGrading: "Initial Psychotechnic Grading",
-    officerCoordinator: "Officer Coordinator",
-    hebrewLevel: "Hebrew Level",
-    welfareStage: "Welfare Stage",
-    SocioEconomicIndex: "Socio-Economic Index",
-    MilitaryServiceRemainingTime: "Military Service Remaining Time",
-    notCounted: "Not Counted",
-    militarySchool: "Military School",
-    newImmigrant: "New Immigrant",
-    lonely: "Lonely",
-    onlyChild: "Only Child",
-    adjustmentProblems: "Adjustment Problems",
-    ethiopian: "Ethiopian",
-    excessWeight: "Excess Weight",
-    militaryPrepSchool: "Military Prep School",
-    bonding: "Bonding",
-    rabbinicAcademy: "Rabbinic Academy",
-    druse: "Druse",
-  };
-
-  try {
-    const pool = await sql.connect(config);
-    const transaction = new sql.Transaction(pool);
-    await transaction.begin();
-
-    for (let i = 1; i < jsonData.length; i++) {
-      const row = jsonData[i];
-
-      // Map column names based on columnMappings
-      const mappedRow = {};
-      Object.keys(row).forEach((columnName, index) => {
-        const mappedColumnName = columnMappings[columnName];
-        if (mappedColumnName) {
-          mappedRow[mappedColumnName] = row[columnName];
-        }
-      });
-
-      const query = `
-        INSERT INTO SolidersInfo (
-          ${Object.keys(mappedRow).join(", ")}
-        ) VALUES (
-          ${Object.values(mappedRow).map((value) => `'${value || ""}'`).join(", ")}
-        )
-      `;
-
-      await transaction.request().query(query);
-    }
-
-    await transaction.commit();
-    return res.send("Upload and data insertion successful.");
-  } catch (error) {
-    console.error("Error inserting data into SolidersInfo table:", error);
-    return res.status(500).send("Error inserting data.");
-  }
-});
-
-export { router as SolidersInfo };
-
-----------------------------------
-סתם דברים חשובים שצריך לזכור: 13/06/23
-
-Yes, you are correct. In the code example provided, the declaration and initialization of the variable @variable should be placed outside the IF statement. Here's the corrected version:
-
+Create a materialized view that stores the results of a complex query. This view will be periodically refreshed to update the cached data.
 sql
 Copy code
-DECLARE @variable INT
-SET @variable = 10
+-- Create the materialized view
+CREATE MATERIALIZED VIEW cached_data AS
+SELECT column1, column2, ...
+FROM table
+WHERE condition;
 
-IF @variable > 5
-BEGIN
-    PRINT 'Variable is greater than 5'
-END
-ELSE
-BEGIN
-    PRINT 'Variable is not greater than 5'
-END
-By declaring and initializing the variable outside the IF statement, you ensure that the variable is available for evaluation within the IF condition.
+-- Refresh the materialized view periodically (e.g., every hour)
+REFRESH MATERIALIZED VIEW cached_data WITH DATA;
+In this example, the cached_data materialized view stores the results of a query on the table based on a specific condition. You can schedule the refresh operation using cron jobs or other scheduling mechanisms based on your requirements.
 
--------------------------------------------
+Adjust PostgreSQL Configuration Parameters:
 
-If the value you are trying to update to in the foreign key column of the first table (shav) already exists in the referenced column of the second table, and you're still encountering a conflict reference error, it could be due to one of the following reasons:
+Modify the PostgreSQL configuration file (postgresql.conf) to adjust important parameters that impact query performance.
+plaintext
+Copy code
+# postgresql.conf
 
-Incorrect foreign key value:
-Double-check that the value you are updating to in the foreign key column of the first table matches an existing value in the referenced column of the second table exactly. Even a small difference like extra spaces or different casing can cause the conflict reference error.
+shared_buffers = 4GB        # Adjust based on available memory
+work_mem = 64MB             # Adjust based on query complexity and available memory
+effective_cache_size = 8GB  # Adjust based on available memory and database size
+In this example, we've adjusted the shared_buffers, work_mem, and effective_cache_size parameters. The values you choose may vary based on your specific hardware, workload, and available system resources. It's important to monitor and fine-tune these parameters based on performance testing and evaluation.
 
-Disabled foreign key constraint:
-It's possible that the foreign key constraint on the first table (shav) has been temporarily disabled. In this case, even if the value exists in the referenced column of the second table, the constraint check won't occur, and you'll encounter a conflict reference error. Make sure that the foreign key constraint is enabled.
+Utilize the Materialized View in Queries:
 
-Transactions and concurrency:
-If there are concurrent transactions happening on the database, it's possible that another transaction has modified the data in the second table since you retrieved it. This can cause conflicts when updating the foreign key value. Ensure that there are no concurrent updates happening on the referenced column of the second table.
+Modify your application queries to utilize the materialized view for query caching.
+sql
+Copy code
+SELECT column1, column2, ...
+FROM cached_data
+WHERE condition;
+In your application code, replace the original complex query with a simple query that retrieves data from the cached_data materialized view. This will fetch the cached results, providing a faster response time compared to executing the complex query directly against the underlying table.
 
-Orphaned records:
-Check for orphaned records in the first table (shav). An orphaned record is a record that has a foreign key value but does not have a corresponding entry in the
+By combining materialized views for query caching and adjusting PostgreSQL configuration parameters, you can significantly improve query performance in scenarios where repetitive queries are executed against large datasets. However, keep in mind that this is just one approach, and the suitability of query caching and configuration adjustments may vary depending on your specific application requirements.
 
-
-referenced table. In such cases, updating the foreign key value to an existing value in the referenced table can still cause a conflict reference error. You'll need to identify and resolve any orphaned records in the first table before updating the foreign key value.
-
-By addressing these possibilities, you should be able to determine the cause of the conflict reference error and resolve the issue accordingly.
-
----------------------------------------------------------------------
-
-npm install tsc -g
-
-npm install typescript --save-dev
-
-npm install ts-node --save-dev
-
-npm install -g typesync
-
-{
-  "compilerOptions": { /* Docs: [https://www.typescriptlang.org/tsconfig](https://www.typescriptlang.org/tsconfig) */
-    "target": "ES2020",
-    "module": "commonjs",
-    "outDir": "bin",
-    "rootDir": "src",
-    "strict": true,
-    "noImplicitAny": false,
-    "strictNullChecks": true,
-    "checkJs": true,
-    "allowJs": true,
-    "moduleResolution": "node",
-    "types": [
-      "node"
-    ],
-    "lib": [
-      "es6"
-    ],
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowUnreachableCode": true,
-     "useUnknownInCatchVariables": false,  // TypeScript 4.4+ only!
-},
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.js"
-  ],
-  "exclude": [
-    "node_modules",
-    "<node_internals>/**",
-  ]
-}
-
-זה לשים בתוך קובץ tsconfig.json
-
-.gitignore out-folder
-Using git? Modify .gitignore to exclude the out folder and temporary files from tsc .
-
-out/
-# TS -incremental file
-tsconfig.tsbuildinfo
-node_modules
-
-In .vscode/settings.json, use the following settings:
-
-{
-  "search.exclude": {
-     "**/node_modules": true,
-     "**/package-lock.json": true,
-     "**/package.json": true,
-     "out/**": true // Don't search the TypeScript "out" folder
-   }
-}
-
-typesync is a cool tool that detects missing types (if not found, install it with npm)
-
-> typesync
-
-https://plainenglish.io/blog/how-to-convert-node-js-code-from-javascript-to-typescript-8e7d031a8f49#create-tsconfigjson
+Remember to thoroughly test and monitor the performance impact of these optimizations in your specific environment. Additionally, consult the PostgreSQL documentation and seek expert advice to fine-tune the configuration parameters and caching strategy for your particular use case.
