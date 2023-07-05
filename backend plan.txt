@@ -41,3 +41,8 @@ In your application code, replace the original complex query with a simple query
 By combining materialized views for query caching and adjusting PostgreSQL configuration parameters, you can significantly improve query performance in scenarios where repetitive queries are executed against large datasets. However, keep in mind that this is just one approach, and the suitability of query caching and configuration adjustments may vary depending on your specific application requirements.
 
 Remember to thoroughly test and monitor the performance impact of these optimizations in your specific environment. Additionally, consult the PostgreSQL documentation and seek expert advice to fine-tune the configuration parameters and caching strategy for your particular use case.
+
+
+---------------------------------------------------
+
+https://plusreturn.com/blog/how-to-extend-express-request-interface-in-typescript/
