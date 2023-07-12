@@ -46,3 +46,97 @@ Remember to thoroughly test and monitor the performance impact of these optimiza
 ---------------------------------------------------
 
 https://plusreturn.com/blog/how-to-extend-express-request-interface-in-typescript/
+
+
+-----------------------------
+
+Fix two: send your request to a proxy
+You can’t ask your users to trick their browsers by installing a plugin that applies an header in the frontend. But you can control the backend address that the web app’s API requests are going to.
+
+The cors-anywhere server is a proxy that adds CORS headers to a request. A proxy acts as an intermediary between a client and server. In this case, the cors-anywhere proxy server operates in between the frontend web app making the request, and the server that responds with data. Similar to the Allow-control-allow-origin plugin, it adds the more open Access-Control-Allow-Origin: * header to the response.
+
+It works like this. Say your frontend is trying to make a GET request to:
+
+https://joke-api-strict-cors.appspot.com/jokes/random
+
+But this api does not have a Access-Control-Allow-Origin value in place that permits the web application domain to access it. So instead, send your GET request to:
+
+https://cors-anywhere.herokuapp.com/https://joke-api-strict-cors.appspot.com/jokes/random
+
+The proxy server receives the https://joke-api-strict-cors.appspot.com/jokes/random from the url above. Then it makes the request to get that server’s response. And finally, the proxy applies the Access-Control-Allow-Origin: * to that original response.
+
+This solution is great because it works in both development and production. In summary, you’re taking advantage of the fact that the same origin policy is only implemented in browser-to-server communication. Which means it doesn’t have to be enforced in server-to-server communication!
+
+The one downside of the cors-anywhere proxy is that can often take a while to receive a response. The latency is high enough to make your applications appear a bit sluggish.
+
+
+-------------------------------------------
+
+Practical example
+Let’s say we have a React application with an Express backend. Our frontend is running on port 3000 - a common default for React.
+
+Since our backend cannot also run on port 3000 locally, we’ll setup Express to run on port 4000.
+
+const express = require('express')
+const app = express()
+const port = 4000
+
+app.get('/whoami', (req, res) => {
+    res.send('Who is anybody?')
+})
+
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+})
+If our React application made a fetch request to our backend like this:
+
+// Fetch request made from http://127.0.0.1:3000
+fetch("http://127.0.0.1:4000/whoami")
+we should expect a CORS error. Just like our earlier example, 127.0.0.1:3000 and 127.0.0.1:4000 are treated as two separate domains, so you cannot make requests across them yet. Let’s look at a few ways to fix this.
+
+Fix 1: Fixing the server
+One approach is to fix our server. We can do this by installing a CORS library (https://www.npmjs.com/package/cors) and telling the server to expect requests from 127.0.0.1:3000
+
+app.use(cors({
+    origin: 'http://127.0.0.1:3000',
+}))
+Our requests will now succeed. This approach is pretty straightforward and is generally good practice. We can use this same approach in production in case our frontend and backend are hosted on two different subdomains.
+
+Fix 2: Adding a proxy
+In production, in some cases, you’ll host your frontend and backend from the same origin. In these cases, you usually want to write fetch code that looks like this:
+
+fetch("/whoami")
+instead of like this:
+
+const url;
+if (process.env.NODE_ENV === "production") {
+    url = "https://www.example.com/whoami"
+} else {
+    url = "http://127.0.0.1:4000/whoami"
+}
+fetch(url)
+To do this, create-react-app actually comes natively with the ability to set up a simple proxy. Add the following to your package.json:
+
+"proxy": "http://localhost:4000",
+Then, any request that looks like an API request (e.g. has a content type application/json) will automatically get forwarded to http://localhost:4000.
+
+The reason this bypasses CORS issues is because, to the browser, the request is going to http://localhost:3000 and therefore doesn’t look like a cross-origin request. The server at http://localhost:3000 does forward the request to http://localhost:4000, but the browser doesn’t know that.
+
+‍
+
+If you are using Next.js instead of create-react-app, you can set up a redirect in your next.config.js which will forward all matching traffic:
+
+module.exports = {
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:4000/:path*'
+      }
+    ]
+  }
+}
+Summary
+The simplest way to fix any CORS issues in React and Next.js is actually not to change anything in React or Next.js but instead to fix your server to allow requests from them.
+
+If you cannot change the server, both React and Next.js have ways for you to turn them into proxies and proxy requests to your backend on your behalf. This avoids any CORS issues by making your browser think the request is not a cross-origin request anymore.
