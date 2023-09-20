@@ -157,4 +157,11 @@ CREATE SEQUENCE UserSequence
 
 INSERT INTO [table] (id, column1, column2, ...)
 VALUES (CONVERT(VARCHAR, NEXT VALUE FOR UserSequence), 'value1', 'value2', ...);
+----------------------------------
+SET IDENTITY_INSERT [table] ON;
+
+INSERT INTO [table] (id, column1, column2, ...)
+VALUES (100000002, 'value1', 'value2', ...);
+
+SET IDENTITY_INSERT [table] OFF;
 
