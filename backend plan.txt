@@ -140,3 +140,21 @@ Summary
 The simplest way to fix any CORS issues in React and Next.js is actually not to change anything in React or Next.js but instead to fix your server to allow requests from them.
 
 If you cannot change the server, both React and Next.js have ways for you to turn them into proxies and proxy requests to your backend on your behalf. This avoids any CORS issues by making your browser think the request is not a cross-origin request anymore.
+
+
+-----------------------------------------
+
+
+21.9.23:
+
+CREATE SEQUENCE UserSequence
+    AS INT
+    START WITH 1000000001
+    INCREMENT BY 1
+    MINVALUE 1000000001
+    NO MAXVALUE
+    NO CYCLE;
+
+INSERT INTO [table] (id, column1, column2, ...)
+VALUES (CONVERT(VARCHAR, NEXT VALUE FOR UserSequence), 'value1', 'value2', ...);
+
