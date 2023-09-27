@@ -165,3 +165,48 @@ VALUES (100000002, 'value1', 'value2', ...);
 
 SET IDENTITY_INSERT [table] OFF;
 
+-------------------------------
+
+Install Git:
+
+If Git is not already installed on your system, download and install it from the official Git website: https://git-scm.com/downloads
+Create a Git Repository:
+
+Decide where you want to store your Git repository (locally or on a Git server such as GitHub, GitLab, or Bitbucket).
+If creating a new repository locally, navigate to the desired directory and run:
+csharp
+Copy code
+git init
+Connect SSMS to Git:
+
+Open SQL Server Management Studio (SSMS).
+In SSMS, go to the "View" menu and select "Team Explorer" to open the Team Explorer pane.
+Link a Database to Source Control:
+
+Right-click on the database in Object Explorer within SSMS.
+Select "Tasks" and then "Schema Compare."
+In the Schema Compare window, click on the source control icon (a blue cylinder with a green arrow).
+Choose the source control provider (e.g., Git).
+Connect to your Git repository and select the appropriate repository and branch.
+Make Database Changes:
+
+Make changes to your database schema, such as creating new relationships between tables or modifying table settings. These changes are typically done through SSMS and result in SQL scripts reflecting the modifications.
+Compare Database with Git Repository:
+
+Back in the Schema Compare window, click on the refresh icon to compare the database schema with the Git repository.
+Review the differences, and SSMS will generate SQL scripts that reflect the changes made.
+Review and Stage Changes:
+
+Review the generated SQL scripts in the Schema Compare window and ensure they reflect the desired changes.
+If satisfied, click on the "Write Updates" button to stage the changes.
+Commit Changes:
+
+In the Team Explorer pane, go to the "Changes" tab.
+Enter a meaningful commit message describing the changes you're making.
+Click "Commit All" to commit the changes to your local Git repository.
+Push Changes to Remote Repository:
+
+If using a remote Git repository, such as on GitHub or GitLab, you'll want to push your changes to the remote repository.
+Click on "Sync" in the Team Explorer pane, then click "Push" to send your commits to the remote repository.
+Now, you've successfully used Git with SSMS to manage and version control your database schema changes. Repeat these steps for any further modifications to your database schema, and Git will track and manage those changes, allowing for collaboration and versioning.
+
